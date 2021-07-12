@@ -1,4 +1,4 @@
-from database import Base, engine
-from models import User
+from src.database.database import engine
+from src.database.schemas import Base
 
 Base.metadata.create_all(engine)

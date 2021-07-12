@@ -1,8 +1,14 @@
-from main import app, Form
 from pydantic import BaseModel
-import hashlib
+from fastapi import status, Header
+from typing import Optional, Dict
 
-class Item(BaseModel):
+from src import app
+from src.database.schemas import *
+from src.headers import create_token, decode_token
+from src.controllers.usercontroller import UserController
+from src.controllers.authcontroller import UserProfileController
+
+class UserModel(BaseModel):
   name: str
   email: str
   password: str
@@ -11,23 +17,51 @@ class Item(BaseModel):
 def home():
   return {'msg': "Hello world"}
 
-@app.get('/user')
-def list_user():
-  return 0
+@app.get('/list-users/')
+def list_users():
+  controller = UserController()
 
-@app.post('/user')
-def create_user(item: Item):
-  if( item ):
-    hash = hashlib.sha512()
-    hash.update(item.password.encode('utf-8'))
-    pass_hash = hash.hexdigest()
+  return controller.index()
 
-    return {
-      "name": item.name,
-      "email": item.email,
-      "password": pass_hash
-    }
+@app.post('/register')
+def create_user(user: UserModel):
+  if( user ):
+    controller = UserController()
 
-  return {"error": "Product not existing!"}
+    return controller.create(user)
+
+  return {'msg': 'Body is required!'}
+
+@app.post('/login/')
+def login(data: Optional[Dict]):
+  userProfile = UserProfileController()
+  result = userProfile.auth_login(data)
+
+  if( not result ):
+    return {'message': 'Invalid login'}
+
+  return create_token(result)
+
+@app.post('/logout/')
+def logout(token: Optional[str] = Header(None)):
+  if( not token ):
+    return {'message': 'token is required'}
+
+  return {'token': None}
+
+@app.put("/update-user/{user_id}")
+def update_user(user_id:int, user: UserModel):
+  if( user ):
+    controller = UserController()
+
+    return controller.update(user_id, user)
+
+  return {'msg': 'Body is required!'}
+
+@app.delete('/delete-user/{user_id}')
+def delete_user(user_id):
+  controller = UserController()
+
+  return controller.delete(user_id)
 
 # https://fastapi.tiangolo.com/tutorial/body/

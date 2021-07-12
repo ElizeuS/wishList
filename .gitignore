@@ -1,0 +1,6 @@
+.env
+.vscode
+src/__pycache__
+src/controllers/__pycache__
+src/database/__pycache__
+src/models/__pycache__

@@ -8,7 +8,7 @@ class UserProfileController:
     self.session = sessionLocal()
 
   def auth_login(self, data):
-    query = select(User.id, User.username, User.email, User.password).where(User.email == data['email'] and User.password == data['password'])
+    query = select(User.id, User.name, User.email, User.password).where(User.email == data['email'] and User.password == data['password'])
 
     result = self.session.execute(query).fetchone()
     self.session.close()

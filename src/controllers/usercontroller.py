@@ -45,10 +45,10 @@ class UserController:
      This method updates the values referring to the user
     '''
     try:
-      session.query(User).filter(User.id == user_id).update({"email": user.email})
-      session.commit()
+      self.session.query(User).filter(User.id == user_id).update({"email": user.email})
+      self.session.commit()
     except:
-      session.rollback()
+      self.session.rollback()
 
     #https://www.tutlinks.com/fastapi-with-postgresql-crud-async/
     #https://fastapi.tiangolo.com/tutorial/security/first-steps/
@@ -59,8 +59,8 @@ class UserController:
     # print('Registro ANTES da remoção:', session.query(NomeDaTabela).filter(NomeDaTabela.id == 1).one_or_none())
 
     try:
-      session.query(User).filter(User.id == user_id).delete()
-      session.commit()
+      self.session.query(User).filter(User.id == user_id).delete()
+      self.session.commit()
     except:
       return HTTPException(status_code=404, detail="Item not found")
-    return {"msg": session.query(User).filter(User.id == user_id).one_or_none()}
+    return {"msg": self.session.query(User).filter(User.id == user_id).one_or_none()}

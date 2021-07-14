@@ -1,13 +1,21 @@
 import jwt, os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import json, copy
 
 SECRET_KEY = 'secret'
 ALGORITHM = "HS256"
 PRIVATE_KEY = "coding_code"
 
+
 def create_token(data):
-  token = data.copy()
-  token.update({'exp': datetime.utcnow() + timedelta(minutes=15)})
+  token = {
+    'id': data.id,
+    'name': data.name,
+    'email': data.email,
+    'password': data.password,
+    'exp': datetime.utcnow() + timedelta(minutes=15)
+  } # Usar 1 minuto para testes
+
 
   return {'token': jwt.encode(token, os.environ['SECRET_KEY'], algorithm='HS256')}
 
@@ -15,7 +23,7 @@ def decode_token(token):
   try:
     return jwt.decode(token, os.environ['SECRET_KEY'], algorithms=['HS256'])
   except jwt.ExpiredSignatureError:
-    return {'token': None}
+    return None
 
 # https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#handle-jwt-tokens
 

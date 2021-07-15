@@ -1,3 +1,4 @@
+from pydantic.types import Json
 from sqlalchemy.exc import IntegrityError
 import hashlib
 from fastapi import status, HTTPException
@@ -45,7 +46,7 @@ class UserController:
      This method updates the values referring to the user
     '''
     try:
-      self.session.query(User).filter(User.id == user_id).update({"email": user.email})
+      self.session.query(User).filter(User.id == user_id).update({"name": user.name})
       self.session.commit()
     except:
       self.session.rollback()
@@ -54,12 +55,12 @@ class UserController:
     #https://fastapi.tiangolo.com/tutorial/security/first-steps/
     return {"msg": "user updated"}
 
-  def delete(self, user_id, status_code = status.HTTP_200_OK):
+  def delete(self, password, user_id):
     # Remover um registro da tabela.
     # print('Registro ANTES da remoção:', session.query(NomeDaTabela).filter(NomeDaTabela.id == 1).one_or_none())
 
     try:
-      self.session.query(User).filter(User.id == user_id).delete()
+      self.session.query(User).filter(User.id == user_id, User.password == password).delete()
       self.session.commit()
     except:
       return HTTPException(status_code=404, detail="Item not found")

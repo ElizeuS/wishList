@@ -1,6 +1,8 @@
+from pydantic.types import Json
 from pydantic import BaseModel
 from fastapi import status, Header
 from typing import Optional, Dict, List
+import json
 
 from src import app
 from src.database.schemas import *
@@ -10,9 +12,9 @@ from src.controllers.authcontroller import UserProfileController
 from src.controllers.productcontroller import ProductController
 
 class UserModel(BaseModel):
-  name: str
-  email: str
-  password: str
+  name: Optional[str]
+  email: Optional[str]
+  password: Optional[str]
 
 class ProductModel(BaseModel):
   title: str
@@ -47,31 +49,44 @@ def login(data: dict):
   result = userProfile.auth_login(data)
 
   if( not result ):
-    return {'message': 'Invalid login'}
+    return {'msg': 'Invalid login'}
 
   return create_token(result)
 
 @app.post('/logout/')
 def logout(token: Optional[str] = Header(None)):
   if( decode_token(token) == None):
-    return {'message': 'token is required'}
+    return {'msg': 'token is required'}
 
   return {'token': None}
 
 @app.put("/update-user/{user_id}")
-def update_user(user_id:int, user: UserModel):
+def update_user(user_id:int, user: UserModel, token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
+
+  if( token_decoded == None):
+    return {'msg': 'token is required'}
+
   if( user ):
+
     controller = UserController()
 
-    return controller.update(user_id, user)
+    return controller.update(token_decoded['id'], user)
 
   return {'msg': 'Body is required!'}
 
 @app.delete('/delete-user/{user_id}')
-def delete_user(user_id):
-  controller = UserController()
+def delete_user(password: UserModel, token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
 
-  return controller.delete(user_id)
+  if( token_decoded == None):
+    return {'msg': 'token is required'}
+
+  if( not password ):
+    return json.dumps({'msg': 'body is required'})
+
+  controller = UserController()
+  return controller.delete(password, token_decoded['id'])
 
 #Product Routes
 
@@ -83,11 +98,32 @@ def list_products():
 
 @app.post('/create-product/')
 def create_product(data: List[ProductModel], token: Optional[str] = Header(None)):
-  if( not token ):
-    return {'message': 'token is required'}
+  if( decode_token(token) == None ):
+    return {'msg': 'token is required'}
 
   controller = ProductController()
 
   return controller.create(data)
+
+@app.post('/update-product')
+def update_product(data, token: Optional[str] = Header(None)):
+  if( decode_token(token) == None ):
+    return {'msg': 'token is required'}
+
+  controller = ProductController()
+
+  return controller.update(data)
+
+@app.delete('/delete-product')
+def delete_product(product, token: Optional[str] = Header(None)):
+  if( decode_token(token) == None ):
+      return {'msg': 'token is required'}
+
+  if( not product ):
+    return json.dumps({'msg': 'body is required'})
+
+  controller = ProductController()
+
+  return controller.delete(product)
 
 # https://fastapi.tiangolo.com/tutorial/body/

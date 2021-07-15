@@ -1,6 +1,6 @@
 # Próximos passos
 
-* Criar o modelo de Produtos
+* [OK] Criar o modelo de Produtos
 	- Título (OB)
 	- Descrição (OP)
 	- Link (OP)
@@ -12,7 +12,7 @@
   - Comprou/ganhou [status] (OP)
   - Privado [status] (OP)
 
-* Implementar os métodos de registro, atualização, leitura e deleção de produtos
+* [DOING] Implementar os métodos de registro, atualização, leitura e deleção de produtos
 
 * Relacionar Usuário [N:N] Produto
 

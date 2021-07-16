@@ -24,6 +24,7 @@ class Product(Base):
   desc = Column(String, nullable=True)
   uri = Column(String, nullable=True)
   img = Column(String, nullable=True)
+  created_by = Column(Integer, nullable=False)
 
   def __repr(self):
       return f"<Product name={self.title}>"

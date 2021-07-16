@@ -98,12 +98,13 @@ def list_products():
 
 @app.post('/create-product/')
 def create_product(data: List[ProductModel], token: Optional[str] = Header(None)):
-  if( decode_token(token) == None ):
+  token_decoded = decode_token(token)
+  if( token_decoded == None ):
     return {'msg': 'token is required'}
 
   controller = ProductController()
 
-  return controller.create(data)
+  return controller.create(data, token_decoded['id'])
 
 @app.post('/update-product')
 def update_product(data, token: Optional[str] = Header(None)):
@@ -116,7 +117,8 @@ def update_product(data, token: Optional[str] = Header(None)):
 
 @app.delete('/delete-product')
 def delete_product(product, token: Optional[str] = Header(None)):
-  if( decode_token(token) == None ):
+  token_decoded = decode_token(token)
+  if( token_decoded == None ):
       return {'msg': 'token is required'}
 
   if( not product ):
@@ -124,6 +126,6 @@ def delete_product(product, token: Optional[str] = Header(None)):
 
   controller = ProductController()
 
-  return controller.delete(product)
+  return controller.delete(product, token_decoded['id'])
 
 # https://fastapi.tiangolo.com/tutorial/body/

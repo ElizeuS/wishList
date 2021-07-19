@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 from fastapi import HTTPException
 from src.database.database import sessionLocal
 from src.database.schemas import Product, WishList
@@ -34,18 +34,15 @@ class ProductController:
       )
 
     try:
-      #query = insert(table=Product, values=product_list)
       self.session.add_all(product_list)
       self.session.commit()
-      #print(self.get_id(product_list))
+      size = len(product_list)
     except IntegrityError:
       self.session.rollback()
 
-      return {'msg': 'User was created'}
+      return {'msg': "Products have not been created"}
 
-    # return {"product_id": new_product.id}
-
-    return {'msg': 'product_list'}
+    return self.get_id(created_by, size)
 
   def update(self, product):
       '''
@@ -81,10 +78,14 @@ class ProductController:
 
       return {"msg": self.session.query(Product).filter(Product.id == product.id).one_or_none()}
 
-  def get_id(self, product):
-    # select id from product where created_by = (user_id) sort id desc limit (n);
+  def get_id(self, user_id, list_size):
+    query = self.session.query(Product.id) \
+              .filter(Product.created_by == user_id) \
+              .order_by(desc(Product.id)) \
+              .limit(list_size).all()
+    # select id from product where created_by = (user_id) order by id desc limit (n);
     '''
     SELECT product_id FROM product
-            ORDER BY 1 DESC LIMIT n;
+            ORDER BY id DESC LIMIT n;
     '''
-    return self.session.query(Product).find_by(product)
+    return query

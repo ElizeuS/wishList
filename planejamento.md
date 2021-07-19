@@ -1,20 +1,22 @@
 # Próximos passos
 
-* [OK] Criar o modelo de Produtos
-	- Título (OB)
-	- Descrição (OP)
-	- Link (OP)
-	- Foto (OP)
+## Amanhã
 
-* Modelo WishList
-  - User_id (stranger)
-  - Product_id (Stranger)
-  - Comprou/ganhou [status] (OP)
-  - Privado [status] (OP)
+### Prioridade [{Maior}]
+
+* Retornar os produtos da minha lista de desejos.
+
+* Adicionar (favoritar) um produto de outro usuário a minha lista.
+
+### Prioridade [{Normal}]
+
+* Deletar um item da minha lista de desejos.
+
+* Resignificar a lógica de [status] do produto.
+
+## Depois
 
 * [DOING] Implementar os métodos de registro, atualização, leitura e deleção de produtos
-
-* Relacionar Usuário [N:N] Produto
 
 * Filtrar os produtos ganhos/comprados
 

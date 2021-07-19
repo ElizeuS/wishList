@@ -26,17 +26,17 @@ class Product(Base):
   img = Column(String, nullable=True)
   created_by = Column(Integer, nullable=False)
 
-  def __repr(self):
+  def __repr__(self):
       return f"<Product name={self.title}>"
 
 class WishList(Base):
   __tablename__= "wishlist"
 
   id = Column(Integer, primary_key=True, autoincrement=True)
-  user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-  product_id = Column(Integer, ForeignKey('product.id'), primary_key=True)
+  user_id = Column(Integer, ForeignKey('user.id', ondelete="CASCADE"))
+  product_id = Column(Integer, ForeignKey('product.id', ondelete="CASCADE"))
   status = Column(Boolean, nullable=False)
 
 
-  def __repr(self):
+  def __repr__(self):
       return f"<WishList status={self.status}>"

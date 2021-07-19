@@ -2,7 +2,7 @@ from pydantic.types import Json
 from pydantic import BaseModel
 from fastapi import status, Header
 from typing import Optional, Dict, List
-import json
+import json, requests
 
 from src import app
 from src.database.schemas import *
@@ -10,6 +10,7 @@ from src.headers import create_token, decode_token
 from src.controllers.usercontroller import UserController
 from src.controllers.authcontroller import UserProfileController
 from src.controllers.productcontroller import ProductController
+from src.controllers.wishlistcontroller import WishListController
 
 class UserModel(BaseModel):
   name: Optional[str]
@@ -34,7 +35,7 @@ def list_users():
 
   return controller.index()
 
-@app.post('/register')
+@app.post('/register/')
 def create_user(user: UserModel):
   if( user ):
     controller = UserController()
@@ -103,8 +104,12 @@ def create_product(data: List[ProductModel], token: Optional[str] = Header(None)
     return {'msg': 'token is required'}
 
   controller = ProductController()
+  product_list = controller.create(data, token_decoded['id'])
 
-  return controller.create(data, token_decoded['id'])
+  wishcontroller = WishListController()
+  wishcontroller.create(product_list, token_decoded['id'])
+
+  return product_list
 
 @app.post('/update-product')
 def update_product(data, token: Optional[str] = Header(None)):

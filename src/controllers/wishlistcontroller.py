@@ -1,15 +1,17 @@
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from src.database.database import sessionLocal
-from src.database.schemas import WishList
+from src.database.schemas import WishList, Product, User
 
 class WishListController:
 
   def __init__(self):
     self.session = sessionLocal()
 
-  def index(self):
-    pass
+  def index(self, user_id):
+    result = self.session.query(WishList).filter(WishList.user_id == user_id).all()
+
+    return result
 
   def create(self, products, user_id):
     print(products)
@@ -25,3 +27,20 @@ class WishListController:
       self.session.rollback()
 
       return {"msg": "the relationship already exists"}
+
+  def search_list(self, user_id):
+    result = self.session.query(WishList.status, Product) \
+            .join(Product, WishList.product_id == Product.id) \
+            .filter(WishList.user_id == user_id) \
+            .all()
+
+    return result
+
+  def search_by_username(self, username: str):
+    result = self.session.query(WishList.status, Product) \
+          .join(Product, WishList.product_id == Product.id) \
+          .join(User, WishList.user_id == User.id) \
+          .filter(User.name == username) \
+          .all()
+
+    return result

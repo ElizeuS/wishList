@@ -4,7 +4,7 @@
 
 ### Prioridade [{Maior}]
 
-* Retornar os produtos da minha lista de desejos.
+* [OK] Retornar os produtos da minha lista de desejos.
 
 * Adicionar (favoritar) um produto de outro usuário a minha lista.
 

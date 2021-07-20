@@ -2,7 +2,7 @@ from pydantic.types import Json
 from pydantic import BaseModel
 from fastapi import status, Header
 from typing import Optional, Dict, List
-import json, requests
+import json
 
 from src import app
 from src.database.schemas import *
@@ -135,15 +135,13 @@ def delete_product(product, token: Optional[str] = Header(None)):
 
 @app.get('/wishlist/')
 def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(None)):
-  if( username ):
-    pass
-  ''' @TODO Para Finalzar'''
-
   token_decoded = decode_token(token)
+  controller = WishListController()
   if( token_decoded == None ):
     return {'msg': 'token is required'}
 
-  controller = WishListController()
+  if( not username ):
+    username = token_decoded['name']
 
   return controller.search_by_username(username)
 

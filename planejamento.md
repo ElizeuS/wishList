@@ -4,9 +4,6 @@
 
 ### Prioridade [{Alta}]
 
-* Alteração no modelo de usuários
-	- Nickname [Obrigatório] [Único]
-
 * Atualizar o valor do [status] do produto.
 ### Prioridade [{Normal}]
 
@@ -30,6 +27,8 @@
 	- usuário_id (self stranger) follower
 	- usuário_id (self stranger) followed
 
+* [OK] Alteração no modelo de usuários
+	- [OK] Nickname [Obrigatório] [Único]
 ## Aprender
 * Docker
 

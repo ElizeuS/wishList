@@ -10,10 +10,11 @@ class User(Base):
 
   id = Column(Integer, primary_key=True, autoincrement=True)
   name = Column(String, nullable=False)
+  nickname = Column(String, nullable=False, unique=True)
   email = Column(String, nullable=False, unique=True)
   password = Column(String, nullable=False)
 
-  def __repr(self):
+  def __repr__(self):
     return f"<User name={self.name}>"
 
 class Product(Base):

@@ -25,6 +25,7 @@ class UserController:
 
     new_user = User(
       name=user.name,
+      nickname=user.nickname,
       email=user.email,
       password=password
     )
@@ -37,7 +38,7 @@ class UserController:
     except IntegrityError:
       self.session.rollback()
 
-      return {'message': 'Username and/or email in using!'}
+      return {'message': 'Nickname and/or E-mail in using!'}
 
     return {"user_id": new_user.id}
 

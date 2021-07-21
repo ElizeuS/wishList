@@ -5,11 +5,7 @@ from src.database.database import sessionLocal
 from src.database.schemas import Product, WishList
 
 from sqlalchemy.sql import insert
-'''
-result = conn.execute("INSERT INTO user (name, country_id) VALUES ('Homer', 123)
-                        RETURNING id")
-[new_id] = result.fetchone()
-'''
+
 class ProductController:
 
   def __init__(self):
@@ -47,9 +43,22 @@ class ProductController:
   def update(self, product):
       '''
        This method updates the values referring to the product
+
+       sess.query(User).filter(User.age == 25).\
+            update({User.age: User.age - 10}, synchronize_session=False)
       '''
       try:
-        self.session.query(Product).filter(Product.id == product.id).update(product)
+        self.session.query(Product) \
+                    .join(WishList) \
+                    .filter(Product.id == product.id) \
+                    .update({
+                      Product.title : product.title,
+                      Product.desc : product.desc,
+                      Product.uri : product.uri,
+                      Product.img : product.img,
+                      WishList.status : Product.status
+                    })
+
         self.session.commit()
       except:
         self.session.rollback()

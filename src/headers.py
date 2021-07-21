@@ -5,6 +5,7 @@ def create_token(data):
   token = {
     'id': data.id,
     'name': data.name,
+    'nickname': data.nickname,
     'email': data.email,
     'password': data.password,
     'exp': datetime.utcnow() + timedelta(minutes=15)

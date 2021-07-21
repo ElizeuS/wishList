@@ -36,11 +36,11 @@ class WishListController:
 
     return result
 
-  def search_by_username(self, username: str):
+  def search_by_username(self, nickname: str):
     result = self.session.query(WishList.status, Product) \
           .join(Product, WishList.product_id == Product.id) \
           .join(User, WishList.user_id == User.id) \
-          .filter(User.name == username) \
+          .filter(User.nickname == nickname) \
           .all()
 
     return result

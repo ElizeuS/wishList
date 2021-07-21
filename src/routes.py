@@ -14,6 +14,7 @@ from src.controllers.wishlistcontroller import WishListController
 
 class UserModel(BaseModel):
   name: Optional[str]
+  nickname: Optional[str]
   email: Optional[str]
   password: Optional[str]
 
@@ -22,6 +23,7 @@ class ProductModel(BaseModel):
   desc: Optional[str]
   uri: Optional[str]
   img: Optional[str]
+  status: Optional[str]
 
 @app.get('/')
 def home():
@@ -112,7 +114,7 @@ def create_product(data: List[ProductModel], token: Optional[str] = Header(None)
   return product_list
 
 @app.post('/update-product')
-def update_product(data, token: Optional[str] = Header(None)):
+def update_product(data: ProductModel, token: Optional[str] = Header(None)):
   if( decode_token(token) == None ):
     return {'msg': 'token is required'}
 
@@ -133,6 +135,8 @@ def delete_product(product, token: Optional[str] = Header(None)):
 
   return controller.delete(product, token_decoded['id'])
 
+# WishList Routes
+
 @app.get('/wishlist/')
 def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(None)):
   token_decoded = decode_token(token)
@@ -141,7 +145,10 @@ def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(N
     return {'msg': 'token is required'}
 
   if( not username ):
-    username = token_decoded['name']
+    username = token_decoded['nickname']
 
   return controller.search_by_username(username)
 
+@app.post('/have-product')
+def status_update(product: ProductModel, status, token: Optional[str] = Header(None)):
+  return {'product': product, 'status': status}

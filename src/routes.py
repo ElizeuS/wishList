@@ -145,12 +145,3 @@ def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(N
 
   return controller.search_by_username(username)
 
-@app.get('/wishlist/{user_id}')
-def get_wishlist(user_id: int, token: Optional[str] = Header(None)):
-  token_decoded = decode_token(token)
-  if( token_decoded == None ):
-    return {'msg': 'token is required'}
-
-  controller = WishListController()
-
-  return controller.search_list(user_id)

@@ -2,18 +2,22 @@
 
 ## Amanhã
 
-### Prioridade [{Maior}]
+### Prioridade [{Alta}]
 
-* [OK] Retornar os produtos da minha lista de desejos.
+* Alteração no modelo de usuários
+	- Nickname [Obrigatório] [Único]
 
-* Adicionar (favoritar) um produto de outro usuário a minha lista.
-
+* Atualizar o valor do [status] do produto.
 ### Prioridade [{Normal}]
+
+* Criar um arquivo de autenticação, com os métodos de verificação e tratamento de exceções.
 
 * Deletar um item da minha lista de desejos.
 
-* Resignificar a lógica de [status] do produto.
+* Deve existir um endpoint para trazer um item da lista de forma randômica.
 
+### Prioridade [{Baixa}]
+* Adicionar (favoritar) um produto de outro usuário a minha lista.
 ## Depois
 
 * [DOING] Implementar os métodos de registro, atualização, leitura e deleção de produtos

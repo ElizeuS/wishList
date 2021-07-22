@@ -28,7 +28,7 @@ class Product(Base):
   created_by = Column(Integer, nullable=False)
 
   def __repr__(self):
-      return f"<Product name={self.title}>"
+      return f"<Product title={self.title}, desc={self.desc}, uri={self.uri}, img={self.img}, created_by={self.created_by}>"
 
 class WishList(Base):
   __tablename__= "wishlist"

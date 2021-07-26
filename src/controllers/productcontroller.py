@@ -40,30 +40,34 @@ class ProductController:
 
     return self.get_id(created_by, size)
 
-  def update(self, product):
-      '''
-       This method updates the values referring to the product
+  def search_by_body(self, product, user_id):
+      result = self.session.query(Product.id) \
+        .where(Product.title == product.title,
+                      Product.desc == product.desc,
+                      Product.uri == product.uri,
+                      Product.img == product.img,
+                      Product.created_by == user_id).first()
 
-       sess.query(User).filter(User.age == 25).\
-            update({User.age: User.age - 10}, synchronize_session=False)
-      '''
+      return result
+
+  def update(self, product, user_id, product_id):
       try:
         self.session.query(Product) \
-                    .join(WishList) \
-                    .filter(Product.id == product.id) \
+                    .join(WishList, Product.id == WishList.product_id) \
+                    .filter(Product.id == product_id) \
                     .update({
                       Product.title : product.title,
                       Product.desc : product.desc,
                       Product.uri : product.uri,
-                      Product.img : product.img,
-                      WishList.status : Product.status
+                      Product.img : product.img
                     })
 
         self.session.commit()
       except:
         self.session.rollback()
+        return {"msg": "Não atualizou"}
 
-      return {"msg": f"product with id {product.id} was updated"}
+      return {"msg": f"product was updated"}
 
   def delete(self, product, user_id):
       '''
@@ -92,9 +96,5 @@ class ProductController:
               .filter(Product.created_by == user_id) \
               .order_by(desc(Product.id)) \
               .limit(list_size).all()
-    # select id from product where created_by = (user_id) order by id desc limit (n);
-    '''
-    SELECT product_id FROM product
-            ORDER BY id DESC LIMIT n;
-    '''
+
     return query

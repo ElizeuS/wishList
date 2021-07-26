@@ -8,7 +8,7 @@ def create_token(data):
     'nickname': data.nickname,
     'email': data.email,
     'password': data.password,
-    'exp': datetime.utcnow() + timedelta(minutes=15)
+    'exp': datetime.utcnow() + timedelta(minutes=40)
   } # Usar 1 minuto para testes
 
 

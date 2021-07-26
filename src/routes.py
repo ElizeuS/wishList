@@ -114,13 +114,15 @@ def create_product(data: List[ProductModel], token: Optional[str] = Header(None)
   return product_list
 
 @app.post('/update-product')
-def update_product(data: ProductModel, token: Optional[str] = Header(None)):
-  if( decode_token(token) == None ):
+def update_product(products: List[ProductModel], token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
+  if ( token_decoded == None ):
     return {'msg': 'token is required'}
 
   controller = ProductController()
+  id_product = controller.search_by_body(products[0], token_decoded['id'])
 
-  return controller.update(data)
+  return controller.update(products[1], token_decoded['id'], id_product[0])
 
 @app.delete('/delete-product')
 def delete_product(product, token: Optional[str] = Header(None)):
@@ -152,3 +154,13 @@ def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(N
 @app.post('/have-product')
 def status_update(product: ProductModel, status, token: Optional[str] = Header(None)):
   return {'product': product, 'status': status}
+
+@app.get('/wishlist/random')
+def random_list(token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
+
+  if( token_decoded == None ):
+    return {'msg': 'token is required'}
+  controller = WishListController()
+
+  return controller.random(token_decoded['id'])

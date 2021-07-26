@@ -3,14 +3,16 @@ from fastapi import HTTPException
 from src.database.database import sessionLocal
 from src.database.schemas import WishList, Product, User
 import hashlib, json
-
+from sqlalchemy import func
 class WishListController:
 
   def __init__(self):
     self.session = sessionLocal()
 
   def index(self, user_id):
-    result = self.session.query(WishList).filter(WishList.user_id == user_id).all()
+    result = self.session.query(WishList) \
+            .filter(WishList.user_id == user_id) \
+            .all()
 
     return result
 
@@ -45,31 +47,12 @@ class WishListController:
           .filter(User.nickname == nickname) \
           .all()
 
-
-    result_list = []
-    for res in result:
-      value = res.id
-      hashed_id = hashlib.blake2b(digest_size=10)
-      hashed_id.update('')
-
-      dicto = {
-        'WishList': {
-          'wishlist_id': hashed_id.hexdigest(),
-          'status': res.status
-        },
-        'Product': {
-          'product_id': res.Product.id,
-          'desc' : res.Product.desc,
-          'img': res.Product.img,
-          'uri': res.Product.uri,
-          'title': res.Product.title,
-          'created_by': res.Product.created_by
-        }
-      }
-      result_list.append(dicto)
-
-    print(result_list)
     return result
+
+  def random(self, user_id):
+    return self.session.query(Product).join(WishList, WishList.product_id == Product.id)\
+      .filter(WishList.user_id == user_id)\
+      .order_by(func.random()).first()
 
   """
   [

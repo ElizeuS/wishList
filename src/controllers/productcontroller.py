@@ -96,3 +96,8 @@ class ProductController:
               .limit(list_size).all()
 
     return query
+
+  def get_products_owned(self, user_id):
+    return self.session.query(Product, WishList) \
+                      .join(WishList, WishList.product_id == Product.id) \
+                      .filter(WishList.user_id == user_id, WishList.status == True).all()

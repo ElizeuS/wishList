@@ -164,3 +164,14 @@ def random_list(token: Optional[str] = Header(None)):
   controller = WishListController()
 
   return controller.random(token_decoded['id'])
+
+@app.get('/wishlist/owned')
+def owned_products(token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
+
+  if( token_decoded == None ):
+     return {'msg': 'token is required'}
+
+  controller = ProductController()
+
+  return controller.get_products_owned(token_decoded['id'])

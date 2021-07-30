@@ -30,11 +30,8 @@ Fornececer aos usuários a possibilidade de criar listas de desejo (wishlists), 
 * Suportar múltiplos usuários
 * Ter um front-end simples
 
-
 ## Adicionais
 
 * [OK] É possível buscar por usuários e ver a lista dos mesmos.
 * [OK] É possível receber todos os produtos já possuidos
-* O usuário pode favoritar um item de uma wishlist de outro usuário.
-* É possível seguir uma lista de um usuário desejado.
-* É possível desejar produtos de outros usuários.
+* [OK] O usuário pode favoritar um item de uma wishlist de outro usuário.

@@ -1,8 +1,6 @@
 # Próximos passos
 ### Prioridade [{Alta}]
 
-* Adicionar (favoritar) um produto de outro usuário a minha lista.
-
 ### Prioridade [{Normal}]
 
 * Criar um arquivo de autenticação, com os métodos de verificação e tratamento de exceções.

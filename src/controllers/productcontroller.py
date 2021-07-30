@@ -67,27 +67,27 @@ class ProductController:
       return {"msg": "product was updated"}
       #return result
 
-  def delete(self, product, user_id):
+  def delete(self, product_id, user_id):
       '''
        This method delete to the product
       '''
       try:
         self.session.query(WishList).where(
           and_(
-                      WishList.product_id == product.id,
+                      WishList.product_id == product_id,
                       WishList.user_id == user_id
                   )
         ).delete()
         self.session.commit()
 
-        if self.session.query(WishList).filter(WishList.product_id == product.id) is None:
-           self.session.query(Product).filter(Product.id == product.id).delete()
+        if self.session.query(WishList).filter(WishList.product_id == product_id) is None:
+           self.session.query(Product).filter(Product.id == product_id).delete()
            self.session.commit()
 
       except:
         return HTTPException(status_code=404, detail="Item not found")
 
-      return {"msg": self.session.query(Product).filter(Product.id == product.id).one_or_none()}
+      return {"msg": self.session.query(Product).filter(Product.id == product_id).one_or_none()}
 
   def get_id(self, user_id, list_size):
     query = self.session.query(Product.id) \

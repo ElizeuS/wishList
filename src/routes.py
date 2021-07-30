@@ -175,3 +175,14 @@ def owned_products(token: Optional[str] = Header(None)):
   controller = ProductController()
 
   return controller.get_products_owned(token_decoded['id'])
+
+@app.post('/wishlist/favorite-item/{product_id}')
+def favorite_item(product_id: Optional[int], token: Optional[str] = Header(None)):
+  token_decoded = decode_token(token)
+
+  if( token_decoded == None ):
+     return {'msg': 'token is required'}
+
+  controller = WishListController()
+
+  return controller.favorite_item(product_id, token_decoded['id'])

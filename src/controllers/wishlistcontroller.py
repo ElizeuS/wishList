@@ -54,19 +54,33 @@ class WishListController:
       .filter(WishList.user_id == user_id)\
       .order_by(func.random()).first()
 
-  """
-  [
-  {
-    "id": 2,
-    "status": false,
-    "Product": {
-      "id": 2,
-      "desc": null,
-      "img": "https://a-static.mlcdn.com.br/1500x1500/quarto-de-bebe-com-guarda-roupa-3-portas-comoda-e-berco-faz-de-conta-espresso-moveis-branco-rustico/madeiramadeira-openapi/517184/285420addfba945e9948d27ac953b8b8.jpg",
-      "uri": "https://www.magazineluiza.com.br/quarto-de-bebe-com-guarda-roupa-3-portas-comoda-e-berco-faz-de-conta-espresso-moveis-branco-rustico/p/bg2c7g4gf2/mo/qdbc/",
-      "title": "Quarto de Bebê com Guarda Roupa 3 Portas Cômoda e Berço Faz de Conta Espresso Móveis Branco/Rústico",
-      "created_by": 3
-    }
-  }
-]
-  """
+  def favorite_item(self, product_id, user_id):
+    product = self.session.query(WishList) \
+                          .filter(WishList.product_id == product_id, WishList.user_id == user_id) \
+                          .all()
+
+    if( len(product) == 0 ):
+      try:
+        new_list = WishList(user_id = user_id, status=False, product_id = product_id)
+        self.session.add(new_list)
+
+        self.session.commit()
+
+        return {'msg': 'Product was followed!'}
+      except IntegrityError:
+        self.session.rollback()
+
+        return {'msg': "Product wasn't fallowed!"}
+  
+    try:
+      self.session.query(WishList) \
+                  .filter(WishList.product_id == product_id, WishList.user_id == user_id) \
+                  .delete()
+      
+      self.session.commit()
+
+      return {'msg': 'Product was unfollowed'}
+    except IntegrityError:
+      self.session.rollback()
+
+      return {'msg': "Product wasn't unfollowed"}

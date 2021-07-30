@@ -20,7 +20,7 @@ Fornececer aos usuários a possibilidade de criar listas de desejo (wishlists), 
   - Link de onde encontrar (opcional)
   - Foto (opcional)
 * O usuário deve poder informar se já ganhou/comprou um item
-* Deve existir um endpoint para trazer um item da lista de forma randômica.
+* [OK] Deve existir um endpoint para trazer um item da lista de forma randômica.
 * [OK] Ter uma base de dados que armazene as informações.
 
 ## Diferencial

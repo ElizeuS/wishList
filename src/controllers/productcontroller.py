@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import and_, desc
+from sqlalchemy import and_, desc, update
 from fastapi import HTTPException
 from src.database.database import sessionLocal
 from src.database.schemas import Product, WishList
@@ -52,22 +52,20 @@ class ProductController:
 
   def update(self, product, user_id, product_id):
       try:
-        self.session.query(Product) \
-                    .join(WishList, Product.id == WishList.product_id) \
-                    .filter(Product.id == product_id) \
-                    .update({
-                      Product.title : product.title,
-                      Product.desc : product.desc,
-                      Product.uri : product.uri,
-                      Product.img : product.img
-                    })
 
+        stmt = update(Product).where(Product.id == product_id).values({'title':product.title, 'desc':product.desc,
+                                                                        'uri': product.uri, 'img': product.img})
+
+        stmt2 = update(WishList).where(WishList.product_id == product_id).values({'status': bool(product.status)})
+        self.session.execute(stmt)
+        self.session.execute(stmt2)
         self.session.commit()
       except:
         self.session.rollback()
         return {"msg": "Não atualizou"}
 
-      return {"msg": f"product was updated"}
+      return {"msg": "product was updated"}
+      #return result
 
   def delete(self, product, user_id):
       '''

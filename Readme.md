@@ -13,25 +13,25 @@ Fornececer aos usuários a possibilidade de criar listas de desejo (wishlists), 
 
 ## Requisitos
 
-* [OK] Criar uma API para gerir uma WishList (Lista de Desejos)
-* [OK] O usuário deve poder incluir um produto em sua lista de desejos
+* [x] Criar uma API para gerir uma WishList (Lista de Desejos)
+* [x] O usuário deve poder incluir um produto em sua lista de desejos
   - Título do Produto (obrigatório)
   - Descrição (opcional)
   - Link de onde encontrar (opcional)
   - Foto (opcional)
-* [OK] O usuário deve poder informar se já ganhou/comprou um item
-* [OK] Deve existir um endpoint para trazer um item da lista de forma randômica.
-* [OK] Ter uma base de dados que armazene as informações.
+* [x] O usuário deve poder informar se já ganhou/comprou um item
+* [x] Deve existir um endpoint para trazer um item da lista de forma randômica.
+* [x] Ter uma base de dados que armazene as informações.
 
 ## Diferencial
 
 * Usar testes unitários
 * A API tiver documentação OpenAPI 3.0
-* Suportar múltiplos usuários
+* [x] Suportar múltiplos usuários
 * Ter um front-end simples
 
 ## Adicionais
 
-* [OK] É possível buscar por usuários e ver a lista dos mesmos.
-* [OK] É possível receber todos os produtos já possuidos
-* [OK] O usuário pode favoritar um item de uma wishlist de outro usuário.
+* [x] É possível buscar por usuários e ver a lista dos mesmos.
+* [x] É possível receber todos os produtos já possuidos
+* [x] O usuário pode favoritar um item de uma wishlist de outro usuário.

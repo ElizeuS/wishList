@@ -25,20 +25,14 @@ class ProductModel(BaseModel):
   img: Optional[str]
   status: Optional[str]
 
-@app.get('/')
-def home():
-  return {'msg': "Hello world"}
 
 # User Routes
 
-@app.get('/list-users/')
-def list_users():
-  controller = UserController()
-
-  return controller.index()
-
-@app.post('/register/')
+@app.post('/register/', tags=["Users"])
 def create_user(user: UserModel):
+  """
+  This will allow the registration of new users in the system.
+  """
   if( user ):
     controller = UserController()
 
@@ -46,8 +40,11 @@ def create_user(user: UserModel):
 
   return {'msg': 'Body is required!'}
 
-@app.post('/login/')
+@app.post('/login/', tags=["Users"])
 def login(data: dict):
+  """
+  This will allow the login of users in the system.
+  """
   userProfile = UserProfileController()
   result = userProfile.auth_login(data)
 
@@ -56,15 +53,18 @@ def login(data: dict):
 
   return create_token(result)
 
-@app.post('/logout/')
+@app.post('/logout/', tags=["Users"])
 def logout(token: Optional[str] = Header(None)):
   if( decode_token(token) == None):
     return {'msg': 'token is required'}
 
   return {'token': None}
 
-@app.put("/update-user/{user_id}")
+@app.put("/update-user/{user_id}", tags=["Users"])
 def update_user(user_id:int, user: UserModel, token: Optional[str] = Header(None)):
+  """
+  This will allow you to update user data.
+  """
   token_decoded = decode_token(token)
 
   if( token_decoded == None):
@@ -78,8 +78,11 @@ def update_user(user_id:int, user: UserModel, token: Optional[str] = Header(None
 
   return {'msg': 'Body is required!'}
 
-@app.delete('/delete-user/{user_id}')
+@app.delete('/delete-user/{user_id}', tags=["Users"])
 def delete_user(password: UserModel, token: Optional[str] = Header(None)):
+  """
+  This will allow the exclusion of users registered in the system.
+  """
   token_decoded = decode_token(token)
 
   if( token_decoded == None):
@@ -91,16 +94,20 @@ def delete_user(password: UserModel, token: Optional[str] = Header(None)):
   controller = UserController()
   return controller.delete(password, token_decoded['id'])
 
+
 #Product Routes
 
-@app.get('/list-products/')
+@app.get('/list-products/', tags=["Products"])
 def list_products():
   controller = ProductController()
 
   return controller.index()
 
-@app.post('/create-product/')
+@app.post('/create-product/', tags=["Products"])
 def create_product(data: List[ProductModel], token: Optional[str] = Header(None)):
+  """
+  This method allows you to insert a product list in the system.
+  """
   token_decoded = decode_token(token)
   if( token_decoded == None ):
     return {'msg': 'token is required'}
@@ -113,8 +120,11 @@ def create_product(data: List[ProductModel], token: Optional[str] = Header(None)
 
   return product_list
 
-@app.post('/update-product')
+@app.post('/update-product', tags=["Products"])
 def update_product(products: List[ProductModel], token: Optional[str] = Header(None)):
+  """
+  This method allows you to update values of a product in the system.
+  """
   token_decoded = decode_token(token)
   if ( token_decoded == None ):
     return {'msg': 'token is required'}
@@ -124,8 +134,11 @@ def update_product(products: List[ProductModel], token: Optional[str] = Header(N
 
   return controller.update(products[1], token_decoded['id'], id_product[0])
 
-@app.delete('/delete-product')
+@app.delete('/delete-product', tags=["Products"])
 def delete_product(product, token: Optional[str] = Header(None)):
+  """
+  This method allows you to delete registered products.
+  """
   token_decoded = decode_token(token)
   if( token_decoded == None ):
       return {'msg': 'token is required'}
@@ -139,8 +152,11 @@ def delete_product(product, token: Optional[str] = Header(None)):
 
 # WishList Routes
 
-@app.get('/wishlist/')
+@app.get('/wishlist/', tags=["Wishlists"])
 def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(None)):
+  """
+  This method returns all products from a user's wish list by nickname.
+  """
   token_decoded = decode_token(token)
   controller = WishListController()
   if( token_decoded == None ):
@@ -151,11 +167,15 @@ def get_wishlist(username: Optional[str] = None, token: Optional[str] = Header(N
 
   return controller.search_by_username(username)
 
-@app.post('/have-product')
+@app.post('/have-product', tags=["Wishlists"])
 def status_update(product: ProductModel, status, token: Optional[str] = Header(None)):
+  """
+  This method updates the item status value if the user has already received/purchased it.
+  True indicates the user already owns the item. Default value is false.
+  """
   return {'product': product, 'status': status}
 
-@app.get('/wishlist/random')
+@app.get('/wishlist/random', tags=["Wishlists"])
 def random_list(token: Optional[str] = Header(None)):
   token_decoded = decode_token(token)
 
@@ -165,8 +185,11 @@ def random_list(token: Optional[str] = Header(None)):
 
   return controller.random(token_decoded['id'])
 
-@app.get('/wishlist/owned')
+@app.get('/wishlist/owned', tags=["Wishlists"])
 def owned_products(token: Optional[str] = Header(None)):
+  """
+  This method returns all products already received/purchased from the user.
+  """
   token_decoded = decode_token(token)
 
   if( token_decoded == None ):
@@ -176,8 +199,12 @@ def owned_products(token: Optional[str] = Header(None)):
 
   return controller.get_products_owned(token_decoded['id'])
 
-@app.post('/wishlist/favorite-item/{product_id}')
+
+@app.post('/wishlist/favorite-item/{product_id}', tags=["Wishlists"])
 def favorite_item(product_id: Optional[int], token: Optional[str] = Header(None)):
+  """
+  This method allows you to covet/favor an item from another user's wish list. The item will be added to your wish list.
+  """
   token_decoded = decode_token(token)
 
   if( token_decoded == None ):
